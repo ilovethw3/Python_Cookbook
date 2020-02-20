@@ -30,10 +30,11 @@ def get_db_conn(dbtype, dbinfo):  # conn = get_db_conn(dbtype, dbinfo); conn.clo
 
 def insert_table(conn, table_name, values, dbtype):
     cursor = conn.cursor()
-    _values = []
-    for v in values:
-        _v = "'" + v + "'"
-        _values.append(_v)
+    # _values = []
+    # for v in values:
+    #     _v = "'" + v + "'"
+    #     _values.append(_v)
+    _values=[repr(i) for i in values]
     print(_values)
     if dbtype == "mysql":
         sql = 'insert into ' + table_name + ' values(' + ','.join(_values) + ')'
