@@ -8,9 +8,9 @@ os.environ['NLS_LANG'] = 'Simplified Chinese_CHINA.ZHS16GBK'
 
 
 
-dbinfo_oracle = {"host": "192.168.0.17",
+dbinfo_oracle = {"host": "192.168.198.26",
           "port": 1521,
-          "db": "orcl",
+          "db": "jmpdb",
           "user": "thw",
           "passwd": "thw",
           "table_name": "test"
@@ -93,11 +93,11 @@ def create_oracle_db():
     # 关闭连接
     connect.close_coo(conn)
     endtime=time.time()
-    print(endtime-starttime)
+    print('花费时间：{:.2f}'.format(endtime-starttime))
 
 
 
 if __name__ == "__main__":
-    create_mysql_db()
+    # create_mysql_db()
     # profile.run("create_mysql_db()")
-    # create_oracle_db()
+    create_oracle_db()
