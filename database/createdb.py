@@ -43,7 +43,7 @@ table_info_oracle = {'id': 'varchar2(128)',
 
 
 
-count = 1001  ##循环插入数据次数
+count = 10  ##循环插入数据次数
 
 def create_mysql_db():
     table_info = table_info_mysql
@@ -98,6 +98,6 @@ def create_oracle_db():
 
 
 if __name__ == "__main__":
-    # create_mysql_db()
+    create_mysql_db()
     # profile.run("create_mysql_db()")
-    create_oracle_db()
+    # create_oracle_db()

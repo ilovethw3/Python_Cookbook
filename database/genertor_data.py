@@ -62,7 +62,6 @@ def genertor_data(count,length):
     _genertor_id = genertor_id()
     # 读取文件到内存
     with open('address.txt',mode='r',encoding='utf-8') as f:
-        file=f.read()
         for c in range(count):
             # 生成id
             _table_values_id = next(_genertor_id)
