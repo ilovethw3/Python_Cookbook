@@ -4,7 +4,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/database" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.7 (Python_Cookbook)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Remote Python 3.7.3 (sftp://root@192.168.5.150:9202/usr/local/python3/bin/python3.7)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

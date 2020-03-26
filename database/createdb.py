@@ -8,19 +8,27 @@ os.environ['NLS_LANG'] = 'Simplified Chinese_CHINA.ZHS16GBK'
 
 
 
-dbinfo_oracle = {"host": "192.168.198.26",
+dbinfo_oracle = {"host": "192.168.198.23",
           "port": 1521,
-          "db": "jmpdb",
+          "db": "orcl",
           "user": "thw",
           "passwd": "thw",
           "table_name": "test"
           }
 
-dbinfo_mysql = {"host": "cdb-9b3dm1pm.cd.tencentcdb.com",
-          "port": 10070,
-          "db": "thw1",
+dbinfo_mysql = {"host": "192.168.0.56",
+          "port": 3306,
+          "db": "tian",
           "user": "root",
           "passwd": "schina1234",
+          "table_name": "test"
+          }
+
+dbinfo_mssql = {"host": "192.168.0.249",
+          "port": 49180,
+          "db": "tian",
+          "user": "sa",
+          "passwd": "Schina1234",
           "table_name": "test"
           }
 
@@ -43,7 +51,7 @@ table_info_oracle = {'id': 'varchar2(128)',
 
 
 
-count = 10  ##循环插入数据次数
+count = 10000  ##循环插入数据次数
 
 def create_mysql_db():
     table_info = table_info_mysql
@@ -71,7 +79,6 @@ def create_mysql_db():
     endtime = time.time()
     print(endtime - starttime)
 
-
 def create_oracle_db():
     table_info = table_info_oracle
     dbtype = "oracle"
@@ -95,9 +102,34 @@ def create_oracle_db():
     endtime=time.time()
     print('花费时间：{:.2f}'.format(endtime-starttime))
 
+def create_mssql_db():
+    table_info = table_info_mysql
+    dbtype = "mssql"
+    dbinfo = dbinfo_mssql
 
+    starttime=time.time()
+    # 创建数据库连接
+    conn = connect.get_db_conn(dbtype, dbinfo)
+    # 删除数据库
+    connect.drop_database(conn, dbinfo['db'],dbtype)
+    # 创建数据库
+    connect.create_database(conn, dbinfo['db'],dbtype)
+    # 创建表
+    connect.use_database(conn, dbinfo['db'],dbtype)
+    connect.create_table(conn, dbinfo['table_name'], table_info,dbtype)
+    # 创建数据
+    _genertor_data = genertor_data.genertor_data(count,len(table_info))
+    for c in range(count):
+        table_values = next(_genertor_data)
+        print('创建的数据为:{}'.format(table_values))
+        connect.insert_table(conn, dbinfo['table_name'], table_values,dbtype)
+    # 关闭连接
+    connect.close_coo(conn)
+    endtime = time.time()
+    print(endtime - starttime)
 
 if __name__ == "__main__":
-    create_mysql_db()
+    # create_mysql_db()
     # profile.run("create_mysql_db()")
-    # create_oracle_db()
+    create_oracle_db()
+    # create_mssql_db()
