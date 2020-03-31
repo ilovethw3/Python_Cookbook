@@ -24,8 +24,8 @@ dbinfo_mysql = {"host": "192.168.0.56",
           "table_name": "test"
           }
 
-dbinfo_mssql = {"host": "192.168.0.249",
-          "port": 49180,
+dbinfo_mssql = {"host": "192.168.130.11",
+          "port": 1433,
           "db": "tian",
           "user": "sa",
           "passwd": "Schina1234",
@@ -51,7 +51,7 @@ table_info_oracle = {'id': 'varchar2(128)',
 
 
 
-count = 10000  ##循环插入数据次数
+count = 100  ##循环插入数据次数
 
 def create_mysql_db():
     table_info = table_info_mysql
@@ -111,12 +111,12 @@ def create_mssql_db():
     # 创建数据库连接
     conn = connect.get_db_conn(dbtype, dbinfo)
     # 删除数据库
-    connect.drop_database(conn, dbinfo['db'],dbtype)
+    # connect.drop_database(conn, dbinfo['db'],dbtype)
     # 创建数据库
-    connect.create_database(conn, dbinfo['db'],dbtype)
+    # connect.create_database(conn, dbinfo['db'],dbtype)
     # 创建表
     connect.use_database(conn, dbinfo['db'],dbtype)
-    connect.create_table(conn, dbinfo['table_name'], table_info,dbtype)
+    # connect.create_table(conn, dbinfo['table_name'], table_info,dbtype)
     # 创建数据
     _genertor_data = genertor_data.genertor_data(count,len(table_info))
     for c in range(count):
@@ -131,5 +131,5 @@ def create_mssql_db():
 if __name__ == "__main__":
     # create_mysql_db()
     # profile.run("create_mysql_db()")
-    create_oracle_db()
-    # create_mssql_db()
+    # create_oracle_db()
+    create_mssql_db()

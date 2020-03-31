@@ -2,6 +2,8 @@
 import pymysql as mysqlc
 import cx_Oracle
 import pymssql
+import logging
+import sys
 
 # 生成顺序ip地址
 def get_ip(number, start_ip):
@@ -177,7 +179,18 @@ def close_coo(conn):
         print(e)
         return False
 
+##接口测试日志，已复制到interface模块内
+def log(ret,linenuo=0,filename='null'):
+    LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
+    logging.basicConfig(level=logging.DEBUG,format=LOG_FORMAT)
+    if ret["state"]=="SUCCESS":
+        if ret["code"] == 200:
+            logging.info("{}:{}:info".format(filename,linenuo))
+        else:
+            logging.warning("{}:{}-{}".format(filename,linenuo,ret["message"]))
+    else:
+        logging.error("{}:{}-{}".format(filename,linenuo,ret["message"]))
 
 if __name__=="__main__":
-    for ip in get_ip(10,'10.10.10.253'):
-        print(ip)
+    ret={'state': 'SUCCESS', 'code': 200, 'message': '测试', 'content': None}
+    log(ret,sys._getframe().f_lineno,__file__)

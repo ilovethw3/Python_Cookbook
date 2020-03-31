@@ -5,6 +5,8 @@ import pymysql, configparser,shutil
 from urllib import parse
 from urllib import request
 import ssl
+import logging
+
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -36,25 +38,34 @@ def encryptPwd(url, passwd):
 
 def addTde(url,pars):
     url = "%s/tde/addTde.action" % url
-    instanceinfo = {"tdeName": pars["tdeName"],
-                    "dbType": 'SQLSERVER',
+    instanceinfo = {
                     "tdeIp": pars["tdeIp"],  # tde实例的ip
                     "tdePort": int(pars["tdePort"]),  # tde port
-                    "instanceName": '',
-                    "databaseRole": 0,
-                    "ifpwd": 1,
+                    "instanceName": pars["instancename"],
                     "username": pars["username"],  # tde 实例的用户名
                     "password": pars["password"],  # tde 实例的密码
-                    "backuplogPath": pars["logBackupPath"],
-                    "mppLogin": '0',
-                    "subNodeId": '',
-                    "subNodeName": '',
-                    "subNodeIp": '',
-                    "subNodePort": ''
+                    "backuplogPath": pars["logbackuppath"],
+                    "tdeName": pars["tdename"],
+                    "dbType":pars["dbType"],
+                    "databaseRole":pars["databaseRole"],
+                    "ifpwd":pars["ifpwd"],
+                    "mppLogin":pars["mppLogin"]
                     }
 
     body_value = parse.urlencode(instanceinfo).encode("utf-8")
     ret = post_data(url, body_value)
+    log(ret, sys._getframe().f_lineno, __file__)
+    return ret
+
+def deleteTde(url,pars):
+    url = "%s/tde/deleteTde.action" % url
+    instanceinfo = {
+        "id": pars["id"]  # tde实例的ip
+    }
+
+    body_value = parse.urlencode(instanceinfo).encode("utf-8")
+    ret = post_data(url, body_value)
+    log(ret, sys._getframe().f_lineno, __file__)
     return ret
 
 def setClientPrivilege(url,pars):
@@ -71,6 +82,7 @@ def setClientPrivilege(url,pars):
                     }
     body_value = parse.urlencode(instanceinfo).encode("utf-8")
     ret = post_data(url, body_value)
+    log(ret, sys._getframe().f_lineno, __file__)
     return ret
 
 def delClientPrivilege(url,pars):
@@ -84,6 +96,7 @@ def delClientPrivilege(url,pars):
                     }
     body_value = parse.urlencode(instanceinfo).encode("utf-8")
     ret = post_data(url, body_value)
+    log(ret, sys._getframe().f_lineno, __file__)
     return ret
 
 
@@ -100,6 +113,7 @@ def deleteTableUserPerInfo(url,pars):
     userTableRelationDetailObj = {"params": instanceinfo}
     body_value = parse.urlencode(userTableRelationDetailObj).encode("utf-8")
     ret = post_data(url, body_value)
+    log(ret, sys._getframe().f_lineno, __file__)
     return ret
 
 def saveTableUserPerInfo(url,pars):
@@ -117,6 +131,7 @@ def saveTableUserPerInfo(url,pars):
     userTableRelationDetailObj = {"params": instanceinfo}
     body_value = parse.urlencode(userTableRelationDetailObj).encode("utf-8")
     ret = post_data(url, body_value)
+    log(ret, sys._getframe().f_lineno, __file__)
     return ret
 
 def setingDefaultValue(url,pars):
@@ -133,6 +148,28 @@ def setingDefaultValue(url,pars):
     protectionColumns = {"protectionColumns": instanceinfo}
     body_value = parse.urlencode(protectionColumns).encode("utf-8")
     ret = post_data(url, body_value)
+    log(ret, sys._getframe().f_lineno, __file__)
     return ret
+
+
+LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
+logging.basicConfig(level=logging.DEBUG,format=LOG_FORMAT)
+def log(ret,lineno=0,filename='null'):
+    if ret["state"]=="SUCCESS":
+        if ret["code"] == 200:
+            logging.info("{}:{}:执行操作成功".format(filename,lineno))
+        else:
+            logging.warning("{}:{}:执行操作失败:{}".format(filename,lineno,ret["message"]))
+    elif ret["state"]=="INFO":
+        logging.debug("{}:{}:{}".format(filename, lineno, ret["message"]))
+    else:
+        logging.error("{}:{}:执行操作失败:{}".format(filename,lineno,ret["message"]))
+
+
+def log_debug(message,lineno=sys._getframe().f_lineno,filename=__file__):
+    logging.debug("{}:{}:{}".format(filename, lineno, message))
+
+
+
 if __name__=="__main__":
     pass
